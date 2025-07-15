@@ -6,12 +6,16 @@ int main()
 {
 	// window rendering 
 	sf::VideoMode size = sf::VideoMode::getDesktopMode();
-	sf::RenderWindow window(size , "title", sf::Style::Fullscreen);
+	sf::RenderWindow window(size, "title", sf::Style::Fullscreen);
 
 	// sprites 
 	sf::CircleShape circle(50.f);
 	circle.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
 	circle.setFillColor(sf::Color::Blue);
+
+	sf::RectangleShape ground(sf::Vector2f(window.getSize().x, 100.f));
+	ground.setPosition(0.f, window.getSize().y - 100.f);
+	ground.setFillColor(sf::Color::Green);
 
 	//time and physics
 
@@ -22,7 +26,7 @@ int main()
 
 	// game loop 
 	while (window.isOpen())
-	{ 
+	{
 		sf::Event evnt;
 		while (window.pollEvent(evnt))
 		{
@@ -30,40 +34,41 @@ int main()
 				if (evnt.key.code == sf::Keyboard::Escape)
 					window.close();
 			if (evnt.type == sf::Event::Closed)
-					window.close();
+				window.close();
 		}
 
 		// delta time 
-		float deltaTime = clock.restart().asSeconds() ;
+		float deltaTime = clock.restart().asSeconds();
 		velocity = { 0.f,0.f };
 		// mvmnt 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 		{
-			if(circle.getPosition().x + circle.getGlobalBounds().width <= window.getSize().x)
-				velocity += {500.f,0.f };
+			if (circle.getPosition().x + circle.getGlobalBounds().width <= window.getSize().x)
+				velocity += {500.f, 0.f };
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 		{
 			if (circle.getPosition().x >= 0)
-				velocity += { -500.f,0.f };
+				velocity += { -500.f, 0.f };
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		{
 			if (circle.getPosition().y >= 0)
-				velocity += { 0.f,-500.f };
+				velocity += { 0.f, -500.f };
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 		{
 			if (circle.getPosition().y + circle.getGlobalBounds().height < window.getSize().y)
-				velocity += { 0.f,500.f };
+				velocity += { 0.f, 500.f };
 		}
 		circle.move(velocity * deltaTime);
 
 		// drawing 
 		window.clear(sf::Color::White);
+		window.draw(ground);
 		window.draw(circle);
 		window.display();
 
 	}
-	return 0; 
+	return 0;
 }
